@@ -1,7 +1,34 @@
 spring:
   application:
     name: mocks
+  messages:
+    basename: messages
+    encoding: UTF-8
 
 server:
   port: 8081
 
+availability:
+  interceptor:
+    enabled: ${AVAILABILITY_INTERCEPTOR_ENABLED:true}
+    latency:
+      min-millis: ${AVAILABILITY_LATENCY_MIN:50}
+      max-millis: ${AVAILABILITY_LATENCY_MAX:150}
+    reliability:
+      failure-rate: ${AVAILABILITY_FAILURE_RATE:0.02}
+      error-status-code: ${AVAILABILITY_ERROR_STATUS_CODE:500}
+
+catalog:
+  interceptor:
+    enabled: ${CATALOG_INTERCEPTOR_ENABLED:true}
+    latency:
+      min-millis: ${CATALOG_LATENCY_MIN:50}
+      max-millis: ${CATALOG_LATENCY_MAX:50}
+    reliability:
+      failure-rate: ${CATALOG_FAILURE_RATE:0.001}
+      error-status-code: ${CATALOG_ERROR_STATUS_CODE:500}
+
+logging:
+  level:
+    com.mocks.availability.config.AvailabilityInterceptor: DEBUG
+    com.mocks.catalog.config.CatalogInterceptor: DEBUG

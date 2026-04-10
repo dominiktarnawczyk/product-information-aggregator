@@ -1,4 +1,4 @@
-package com.example.mocks
+package com.mocks
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

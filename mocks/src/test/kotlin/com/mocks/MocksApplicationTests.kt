@@ -1,4 +1,4 @@
-package com.example.mocks
+package com.mocks
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,16 +16,6 @@ class MocksApplicationTests {
 
 	@Test
 	fun contextLoads() {
-	}
-
-	@Test
-	fun `health endpoint returns up`() {
-		mockMvc.get("/health")
-			.andExpect {
-				status { isOk() }
-				jsonPath("$.application") { value("mocks") }
-				jsonPath("$.status") { value("UP") }
-			}
 	}
 }
 

@@ -29,3 +29,10 @@ Run both in separate terminals:
 ./gradlew :aggregator:bootRun
 ./gradlew :mocks:bootRun
 ```
+
+## Testing with API Interceptors
+
+The `mocks` application includes API interceptors (chaos engineering features) that allow you to simulate latency and failures for testing purposes.
+
+See [CHAOS_MONKEY_QUICKSTART.md](mocks/CHAOS_MONKEY_QUICKSTART.md) for detailed usage guide.
+
