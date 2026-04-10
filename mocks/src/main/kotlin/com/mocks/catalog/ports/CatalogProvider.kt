@@ -73,5 +73,6 @@ data class Catalog(
     val images: List<String>
 )
 
-data class ProductId(val productId: String)
+@JvmInline
+value class ProductId(val productId: String)
 

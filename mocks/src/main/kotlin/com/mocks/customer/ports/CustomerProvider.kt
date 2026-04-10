@@ -44,5 +44,6 @@ data class Customer(
     val preferences: Map<String, String>?
 )
 
-data class CustomerId(val customerId: String)
+@JvmInline
+value class CustomerId(val customerId: String)
 

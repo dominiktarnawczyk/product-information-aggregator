@@ -3,6 +3,7 @@ package com.mocks.config
 import com.mocks.availability.config.AvailabilityInterceptor
 import com.mocks.catalog.config.CatalogInterceptor
 import com.mocks.customer.config.CustomerInterceptor
+import com.mocks.pricing.config.PricingInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -11,7 +12,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class WebConfig(
     private val availabilityInterceptor: AvailabilityInterceptor,
     private val catalogInterceptor: CatalogInterceptor,
-    private val customerInterceptor: CustomerInterceptor
+    private val customerInterceptor: CustomerInterceptor,
+    private val pricingInterceptor: PricingInterceptor
 ) : WebMvcConfigurer {
 
     override fun addInterceptors(registry: InterceptorRegistry) {
@@ -23,5 +25,8 @@ class WebConfig(
 
         registry.addInterceptor(customerInterceptor)
             .addPathPatterns("/api/customer/**")
+
+        registry.addInterceptor(pricingInterceptor)
+            .addPathPatterns("/api/pricing/**")
     }
 }

@@ -12,8 +12,8 @@ availability:
   interceptor:
     enabled: ${AVAILABILITY_INTERCEPTOR_ENABLED:true}
     latency:
-      min-millis: ${AVAILABILITY_LATENCY_MIN:50}
-      max-millis: ${AVAILABILITY_LATENCY_MAX:150}
+      min-millis: ${AVAILABILITY_LATENCY_MIN:100}
+      max-millis: ${AVAILABILITY_LATENCY_MAX:100}
     reliability:
       failure-rate: ${AVAILABILITY_FAILURE_RATE:0.02}
       error-status-code: ${AVAILABILITY_ERROR_STATUS_CODE:500}
@@ -38,8 +38,19 @@ customer:
       failure-rate: ${CUSTOMER_FAILURE_RATE:0.01}
       error-status-code: ${CUSTOMER_ERROR_STATUS_CODE:500}
 
+pricing:
+  interceptor:
+    enabled: ${PRICING_INTERCEPTOR_ENABLED:true}
+    latency:
+      min-millis: ${PRICING_LATENCY_MIN:80}
+      max-millis: ${PRICING_LATENCY_MAX:80}
+    reliability:
+      failure-rate: ${PRICING_FAILURE_RATE:0.005}
+      error-status-code: ${PRICING_ERROR_STATUS_CODE:500}
+
 logging:
   level:
     com.mocks.availability.config.AvailabilityInterceptor: DEBUG
     com.mocks.catalog.config.CatalogInterceptor: DEBUG
     com.mocks.customer.config.CustomerInterceptor: DEBUG
+    com.mocks.pricing.config.PricingInterceptor: DEBUG
