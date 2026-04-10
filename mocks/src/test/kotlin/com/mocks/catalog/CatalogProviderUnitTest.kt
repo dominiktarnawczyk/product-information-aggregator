@@ -24,35 +24,6 @@ class CatalogProviderUnitTest {
         catalogProvider = CatalogProvider(messageSource)
     }
 
-    private fun mockMessageSource(
-        locale: Locale,
-        productName: String = "Test Product",
-        productDescription: String = "Test Description",
-        dimensions: String = "Dimensions",
-        weight: String = "Weight",
-        material: String = "Material",
-        color: String = "Color",
-        materialValue: String = "Premium Plastic",
-        colorValue: String = "Blue"
-    ) {
-        whenever(messageSource.getMessage(eq("catalog.product.name"), any(), eq(locale)))
-            .thenReturn(productName)
-        whenever(messageSource.getMessage(eq("catalog.product.description"), any(), eq(locale)))
-            .thenReturn(productDescription)
-        whenever(messageSource.getMessage(eq("catalog.specs.dimensions"), any(), eq(locale)))
-            .thenReturn(dimensions)
-        whenever(messageSource.getMessage(eq("catalog.specs.weight"), any(), eq(locale)))
-            .thenReturn(weight)
-        whenever(messageSource.getMessage(eq("catalog.specs.material"), any(), eq(locale)))
-            .thenReturn(material)
-        whenever(messageSource.getMessage(eq("catalog.specs.color"), any(), eq(locale)))
-            .thenReturn(color)
-        whenever(messageSource.getMessage(eq("catalog.specs.material.value"), any(), eq(locale)))
-            .thenReturn(materialValue)
-        whenever(messageSource.getMessage(eq("catalog.specs.color.value"), any(), eq(locale)))
-            .thenReturn(colorValue)
-    }
-
     @Test
     fun `should return catalog with product name for default locale`() {
         // Given
@@ -207,6 +178,35 @@ class CatalogProviderUnitTest {
         assertTrue(result.description.isNotEmpty())
         assertTrue(result.specs.isNotEmpty())
         assertTrue(result.images.isNotEmpty())
+    }
+
+    private fun mockMessageSource(
+        locale: Locale,
+        productName: String = "Test Product",
+        productDescription: String = "Test Description",
+        dimensions: String = "Dimensions",
+        weight: String = "Weight",
+        material: String = "Material",
+        color: String = "Color",
+        materialValue: String = "Premium Plastic",
+        colorValue: String = "Blue"
+    ) {
+        whenever(messageSource.getMessage(eq("catalog.product.name"), any(), eq(locale)))
+            .thenReturn(productName)
+        whenever(messageSource.getMessage(eq("catalog.product.description"), any(), eq(locale)))
+            .thenReturn(productDescription)
+        whenever(messageSource.getMessage(eq("catalog.specs.dimensions"), any(), eq(locale)))
+            .thenReturn(dimensions)
+        whenever(messageSource.getMessage(eq("catalog.specs.weight"), any(), eq(locale)))
+            .thenReturn(weight)
+        whenever(messageSource.getMessage(eq("catalog.specs.material"), any(), eq(locale)))
+            .thenReturn(material)
+        whenever(messageSource.getMessage(eq("catalog.specs.color"), any(), eq(locale)))
+            .thenReturn(color)
+        whenever(messageSource.getMessage(eq("catalog.specs.material.value"), any(), eq(locale)))
+            .thenReturn(materialValue)
+        whenever(messageSource.getMessage(eq("catalog.specs.color.value"), any(), eq(locale)))
+            .thenReturn(colorValue)
     }
 }
 

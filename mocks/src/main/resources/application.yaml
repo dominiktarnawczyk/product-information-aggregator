@@ -28,7 +28,18 @@ catalog:
       failure-rate: ${CATALOG_FAILURE_RATE:0.001}
       error-status-code: ${CATALOG_ERROR_STATUS_CODE:500}
 
+customer:
+  interceptor:
+    enabled: ${CUSTOMER_INTERCEPTOR_ENABLED:true}
+    latency:
+      min-millis: ${CUSTOMER_LATENCY_MIN:60}
+      max-millis: ${CUSTOMER_LATENCY_MAX:60}
+    reliability:
+      failure-rate: ${CUSTOMER_FAILURE_RATE:0.01}
+      error-status-code: ${CUSTOMER_ERROR_STATUS_CODE:500}
+
 logging:
   level:
     com.mocks.availability.config.AvailabilityInterceptor: DEBUG
     com.mocks.catalog.config.CatalogInterceptor: DEBUG
+    com.mocks.customer.config.CustomerInterceptor: DEBUG

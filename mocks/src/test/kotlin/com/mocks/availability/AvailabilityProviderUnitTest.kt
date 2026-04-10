@@ -25,20 +25,6 @@ class AvailabilityProviderUnitTest {
         availabilityProvider = AvailabilityProvider(messageSource)
     }
 
-    private fun mockMessageSource(
-        locale: Locale,
-        warehouseLocation: String = "Test Warehouse",
-        deliveryDays: String = "3",
-        dateFormat: String = "yyyy-MM-dd"
-    ) {
-        whenever(messageSource.getMessage(eq("availability.warehouse.location"), any(), eq(locale)))
-            .thenReturn(warehouseLocation)
-        whenever(messageSource.getMessage(eq("availability.delivery.days"), any(), eq("3"), eq(locale)))
-            .thenReturn(deliveryDays)
-        whenever(messageSource.getMessage(eq("availability.date.format"), any(), eq("yyyy-MM-dd"), eq(locale)))
-            .thenReturn(dateFormat)
-    }
-
     @Test
     fun `should return availability with correct stock level based on product id hash`() {
         // Given
@@ -180,5 +166,19 @@ class AvailabilityProviderUnitTest {
 
         // Then
         assertEquals(result1.stockLevel, result2.stockLevel)
+    }
+
+    private fun mockMessageSource(
+        locale: Locale,
+        warehouseLocation: String = "Test Warehouse",
+        deliveryDays: String = "3",
+        dateFormat: String = "yyyy-MM-dd"
+    ) {
+        whenever(messageSource.getMessage(eq("availability.warehouse.location"), any(), eq(locale)))
+            .thenReturn(warehouseLocation)
+        whenever(messageSource.getMessage(eq("availability.delivery.days"), any(), eq("3"), eq(locale)))
+            .thenReturn(deliveryDays)
+        whenever(messageSource.getMessage(eq("availability.date.format"), any(), eq("yyyy-MM-dd"), eq(locale)))
+            .thenReturn(dateFormat)
     }
 }
