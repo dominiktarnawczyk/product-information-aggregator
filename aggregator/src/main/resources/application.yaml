@@ -1,7 +1,27 @@
 spring:
   application:
     name: aggregator
+  messages:
+    basename: messages
+    encoding: UTF-8
 
 server:
   port: 8080
 
+rest-client:
+  connect-timeout-ms: ${REST_CLIENT_CONNECT_TIMEOUT:120}
+  read-timeout-ms: ${REST_CLIENT_READ_TIMEOUT:120}
+
+aggregator:
+  endpoint:
+    timeout-ms: ${AGGREGATOR_ENDPOINT_TIMEOUT_MS:500}
+
+endpoints:
+  catalog:
+    url: http://localhost:8081/api/catalog
+  pricing:
+    url: http://localhost:8081/api/pricing
+  availability:
+    url: http://localhost:8081/api/availability
+  customer:
+    url: http://localhost:8081/api/customer

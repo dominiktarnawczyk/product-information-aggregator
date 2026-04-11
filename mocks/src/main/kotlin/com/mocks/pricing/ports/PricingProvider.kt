@@ -2,7 +2,6 @@ package com.mocks.pricing.ports
 
 import org.springframework.context.MessageSource
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.math.RoundingMode.HALF_UP
 import java.text.NumberFormat
 import java.util.Locale
@@ -26,7 +25,6 @@ class PricingProvider(
     }
 
     private fun calculateBasePrice(productId: ProductId): BigDecimal {
-        // Generate price based on product ID hash
         val hash = productId.productId.hashCode().toLong()
         val priceValue = 50 + (hash.absoluteValue % 950)
         return BigDecimal(priceValue).setScale(2, HALF_UP)
@@ -85,5 +83,3 @@ value class ProductId(val productId: String)
 
 @JvmInline
 value class CustomerId(val customerId: String)
-
-

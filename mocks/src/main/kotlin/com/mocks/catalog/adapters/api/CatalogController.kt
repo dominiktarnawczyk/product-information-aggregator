@@ -38,4 +38,3 @@ data class CatalogResponse(
     val specs: Map<String, String>,
     val images: List<String>
 )
-

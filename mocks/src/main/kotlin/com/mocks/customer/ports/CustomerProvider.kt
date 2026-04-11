@@ -21,12 +21,12 @@ class CustomerProvider(
         )
     }
 
-    private fun getCustomerPreferences(customerId: CustomerId, locale: Locale): Map<String, String> {
+    private fun getCustomerPreferences(customerId: CustomerId, locale: Locale): Preferences {
         val hash = customerId.customerId.hashCode().toLong()
-        return mapOf(
-            "communicationChannel" to getLocalizedCommunicationPreference(locale),
-            "newsletterSubscription" to (hash % 2 == 0L).toString(),
-            "loyaltyProgramMember" to (hash % 3 == 0L).toString()
+        return Preferences(
+            communicationChannel = getLocalizedCommunicationPreference(locale),
+            newsletterSubscription = hash % 2 == 0L,
+            loyaltyProgramMember = hash % 3 == 0L
         )
     }
 
@@ -41,7 +41,13 @@ class CustomerProvider(
 
 data class Customer(
     val customerSegment: String,
-    val preferences: Map<String, String>?
+    val preferences: Preferences?
+)
+
+data class Preferences(
+    val communicationChannel: String,
+    val newsletterSubscription: Boolean,
+    val loyaltyProgramMember: Boolean
 )
 
 @JvmInline

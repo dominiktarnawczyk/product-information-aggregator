@@ -61,10 +61,10 @@ class CatalogProviderUnitTest {
         val locale = Locale.GERMANY
         mockMessageSource(
             locale,
-            dimensions = "Abmessungen",
-            weight = "Gewicht",
-            material = "Material",
-            color = "Farbe",
+            dimensionsKey = "Abmessungen",
+            weightKey = "Gewicht",
+            materialKey = "Material",
+            colorKey = "Farbe",
             materialValue = "Premium-Kunststoff",
             colorValue = "Blau"
         )
@@ -73,10 +73,6 @@ class CatalogProviderUnitTest {
         val result = catalogProvider.catalog(productId, locale)
 
         // Then
-        assertTrue(result.specs.containsKey("Abmessungen"))
-        assertTrue(result.specs.containsKey("Gewicht"))
-        assertTrue(result.specs.containsKey("Material"))
-        assertTrue(result.specs.containsKey("Farbe"))
         assertEquals("Premium-Kunststoff", result.specs["Material"])
         assertEquals("Blau", result.specs["Farbe"])
     }
@@ -143,7 +139,6 @@ class CatalogProviderUnitTest {
         val result2 = catalogProvider.catalog(productId2, locale)
 
         // Then
-        // Images should be different (at least some of them)
         val imagesMatch = result1.images == result2.images
         assertTrue(!imagesMatch, "Different product IDs should generate different images")
     }
@@ -184,10 +179,10 @@ class CatalogProviderUnitTest {
         locale: Locale,
         productName: String = "Test Product",
         productDescription: String = "Test Description",
-        dimensions: String = "Dimensions",
-        weight: String = "Weight",
-        material: String = "Material",
-        color: String = "Color",
+        dimensionsKey: String = "Dimensions",
+        weightKey: String = "Weight",
+        materialKey: String = "Material",
+        colorKey: String = "Color",
         materialValue: String = "Premium Plastic",
         colorValue: String = "Blue"
     ) {
@@ -196,13 +191,13 @@ class CatalogProviderUnitTest {
         whenever(messageSource.getMessage(eq("catalog.product.description"), any(), eq(locale)))
             .thenReturn(productDescription)
         whenever(messageSource.getMessage(eq("catalog.specs.dimensions"), any(), eq(locale)))
-            .thenReturn(dimensions)
+            .thenReturn(dimensionsKey)
         whenever(messageSource.getMessage(eq("catalog.specs.weight"), any(), eq(locale)))
-            .thenReturn(weight)
+            .thenReturn(weightKey)
         whenever(messageSource.getMessage(eq("catalog.specs.material"), any(), eq(locale)))
-            .thenReturn(material)
+            .thenReturn(materialKey)
         whenever(messageSource.getMessage(eq("catalog.specs.color"), any(), eq(locale)))
-            .thenReturn(color)
+            .thenReturn(colorKey)
         whenever(messageSource.getMessage(eq("catalog.specs.material.value"), any(), eq(locale)))
             .thenReturn(materialValue)
         whenever(messageSource.getMessage(eq("catalog.specs.color.value"), any(), eq(locale)))

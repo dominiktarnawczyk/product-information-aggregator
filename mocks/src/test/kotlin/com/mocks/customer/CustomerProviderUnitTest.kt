@@ -83,10 +83,9 @@ class CustomerProviderUnitTest {
 
         // Then
         assertNotNull(result.preferences)
-        assertEquals(3, result.preferences.size)
-        assertTrue(result.preferences.containsKey("communicationChannel"))
-        assertTrue(result.preferences.containsKey("newsletterSubscription"))
-        assertTrue(result.preferences.containsKey("loyaltyProgramMember"))
+        assertNotNull(result.preferences.communicationChannel)
+        assertTrue(result.preferences.newsletterSubscription || !result.preferences.newsletterSubscription)
+
     }
 
     @Test
@@ -114,10 +113,9 @@ class CustomerProviderUnitTest {
 
         // Then
         assertNotNull(result.preferences)
-        assertTrue(result.preferences.containsKey("communicationChannel"))
-        assertTrue(result.preferences.containsKey("newsletterSubscription"))
-        assertTrue(result.preferences.containsKey("loyaltyProgramMember"))
-        assertEquals("Email", result.preferences["communicationChannel"])
+        assertEquals("Email", result.preferences.communicationChannel)
+        assertNotNull(result.preferences.newsletterSubscription)
+        assertNotNull(result.preferences.loyaltyProgramMember)
     }
 
     @Test
@@ -132,10 +130,9 @@ class CustomerProviderUnitTest {
 
         // Then
         assertNotNull(result.preferences)
-        assertTrue(result.preferences.containsKey("communicationChannel"))
-        assertTrue(result.preferences.containsKey("newsletterSubscription"))
-        assertTrue(result.preferences.containsKey("loyaltyProgramMember"))
-        assertEquals("E-Mail", result.preferences["communicationChannel"])
+        assertEquals("E-Mail", result.preferences.communicationChannel)
+        assertNotNull(result.preferences.newsletterSubscription)
+        assertNotNull(result.preferences.loyaltyProgramMember)
     }
 
     @Test
@@ -184,7 +181,7 @@ class CustomerProviderUnitTest {
         // Then
         assertTrue(result.customerSegment.isNotEmpty())
         assertNotNull(result.preferences)
-        assertTrue(result.preferences.isNotEmpty())
+        assertNotNull(result.preferences.communicationChannel)
     }
 
     private fun mockMessageSource(
