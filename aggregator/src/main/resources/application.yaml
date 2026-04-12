@@ -14,7 +14,7 @@ rest-client:
 
 aggregator:
   endpoint:
-    timeout-ms: ${AGGREGATOR_ENDPOINT_TIMEOUT_MS:500}
+    timeout-ms: ${AGGREGATOR_ENDPOINT_TIMEOUT_MS:600}
 
 endpoints:
   catalog:

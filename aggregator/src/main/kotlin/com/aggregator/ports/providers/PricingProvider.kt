@@ -19,7 +19,8 @@ class PricingProvider(
         logger.info { "Fetching pricing data for productId: $productId, market: $marketCode, customer: $customerId" }
         return try {
             pricingClient.getPricing(productId, marketCode, customerId)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            logger.error("Error fetching pricing data", e)
             unavailablePriceResponse(marketCode)
         }
     }

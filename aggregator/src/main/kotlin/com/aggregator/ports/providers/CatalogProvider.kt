@@ -17,7 +17,7 @@ class CatalogProvider(
         return try {
             catalogClient.getCatalog(productId, marketCode)
         } catch (e: Exception) {
-            logger.error { "Catalog service failed - this is critical" }
+            logger.error("Error fetching catalog data", e)
             throw CatalogServiceUnrespondingException("Catalog service is not responding", e)
         }
     }

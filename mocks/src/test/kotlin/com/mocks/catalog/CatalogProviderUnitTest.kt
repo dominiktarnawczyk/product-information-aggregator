@@ -73,8 +73,8 @@ class CatalogProviderUnitTest {
         val result = catalogProvider.catalog(productId, locale)
 
         // Then
-        assertEquals("Premium-Kunststoff", result.specs["Material"])
-        assertEquals("Blau", result.specs["Farbe"])
+        assertEquals("Premium-Kunststoff", result.specs.material)
+        assertEquals("Blau", result.specs.color)
     }
 
     @Test
@@ -88,9 +88,10 @@ class CatalogProviderUnitTest {
         val result = catalogProvider.catalog(productId, locale)
 
         // Then
-        assertEquals(4, result.specs.size)
-        assertTrue(result.specs.values.contains("30cm x 20cm x 10cm"))
-        assertTrue(result.specs.values.contains("2.5kg"))
+        assertEquals("30cm x 20cm x 10cm", result.specs.dimension)
+        assertEquals("2.5kg", result.specs.weight)
+        assertEquals("Premium Plastic", result.specs.material)
+        assertEquals("Blue", result.specs.color)
     }
 
     @Test
@@ -171,7 +172,10 @@ class CatalogProviderUnitTest {
         // Then
         assertTrue(result.name.isNotEmpty())
         assertTrue(result.description.isNotEmpty())
-        assertTrue(result.specs.isNotEmpty())
+        assertTrue(result.specs.dimension.isNotEmpty())
+        assertTrue(result.specs.weight.isNotEmpty())
+        assertTrue(result.specs.material.isNotEmpty())
+        assertTrue(result.specs.color.isNotEmpty())
         assertTrue(result.images.isNotEmpty())
     }
 

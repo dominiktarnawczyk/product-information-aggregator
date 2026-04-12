@@ -31,12 +31,12 @@ class CatalogProvider(
         )
     }
 
-    private fun getProductSpecs(locale: Locale): Map<String, String> {
-        return mapOf(
-            messageSource.getMessage("catalog.specs.dimensions", null, locale) to "30cm x 20cm x 10cm",
-            messageSource.getMessage("catalog.specs.weight", null, locale) to "2.5kg",
-            messageSource.getMessage("catalog.specs.material", null, locale) to getLocalizedMaterial(locale),
-            messageSource.getMessage("catalog.specs.color", null, locale) to getLocalizedColor(locale)
+    private fun getProductSpecs(locale: Locale): Specification {
+        return Specification(
+            dimension = "30cm x 20cm x 10cm",
+            weight = "2.5kg",
+            material = getLocalizedMaterial(locale),
+            color = getLocalizedColor(locale)
         )
     }
 
@@ -69,8 +69,15 @@ class CatalogProvider(
 data class Catalog(
     val name: String,
     val description: String,
-    val specs: Map<String, String>,
+    val specs: Specification,
     val images: List<String>
+)
+
+data class Specification(
+    val dimension: String,
+    val weight: String,
+    val material: String,
+    val color: String
 )
 
 @JvmInline

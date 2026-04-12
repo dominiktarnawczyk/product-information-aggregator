@@ -20,7 +20,8 @@ class CustomerProvider(
             logger.info { "Fetching customer data for market: $marketCode, customer: $customerId" }
             try {
                 customerClient.getCustomer(marketCode, customerId)
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                logger.error("Error fetching customer data", e)
                 customerInformationNotProvided(marketCode)
             }
         } else {

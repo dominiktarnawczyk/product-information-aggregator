@@ -27,7 +27,12 @@ class CatalogController(
     private fun Catalog.toResponse() = CatalogResponse(
         name = name,
         description = description,
-        specs = specs,
+        specs = SpecificationResponse(
+            dimension = specs.dimension,
+            weight = specs.weight,
+            material = specs.material,
+            color = specs.color
+        ),
         images = images
     )
 }
@@ -35,6 +40,13 @@ class CatalogController(
 data class CatalogResponse(
     val name: String,
     val description: String,
-    val specs: Map<String, String>,
+    val specs: SpecificationResponse,
     val images: List<String>
+)
+
+data class SpecificationResponse(
+    val dimension: String,
+    val weight: String,
+    val material: String,
+    val color: String
 )

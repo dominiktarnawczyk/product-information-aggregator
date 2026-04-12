@@ -15,7 +15,7 @@ class CustomerClient(
 ) {
 
     fun getCustomer(marketCode: String, customerId: String?): CustomerResponse {
-        logger.info("Fetching customer data for market: $marketCode, customer: $customerId")
+        logger.info("Fetching customer data API endpoint $customerUrl for market: $marketCode, customer: $customerId")
         return restClient.get()
             .uri(uriStringBuilder(marketCode, customerId))
             .retrieve()

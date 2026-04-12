@@ -14,17 +14,19 @@ class AvailabilityClient(
     @param:Value("\${endpoints.availability.url}") private val availabilityUrl: String
 ) {
     fun getAvailability(productId: String, marketCode: String): AvailabilityResponse {
-        val url = UriComponentsBuilder.fromUriString(availabilityUrl)
-            .queryParam("product-id", productId)
-            .queryParam("market-code", marketCode)
-            .toUriString()
-
-        logger.info("Fetching availability for product: $productId, market: $marketCode")
+        logger.info("Fetching availability API endpoint $availabilityUrl for product: $productId, market: $marketCode")
         return restClient.get()
-            .uri(url)
+            .uri(uriStringBuilder(productId, marketCode))
             .retrieve()
             .body<AvailabilityResponse>()
             ?: throw RuntimeException("Availability service returned null")
+    }
+
+    private fun uriStringBuilder(productId: String, marketCode: String): String {
+        return UriComponentsBuilder.fromUriString(availabilityUrl)
+            .queryParam("product-id", productId)
+            .queryParam("market-code", marketCode)
+            .toUriString()
     }
 
     companion object: KLogging()

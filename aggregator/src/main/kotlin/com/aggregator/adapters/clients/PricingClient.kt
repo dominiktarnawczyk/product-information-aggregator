@@ -14,7 +14,7 @@ class PricingClient(
     @param:Value("\${endpoints.pricing.url}") private val pricingUrl: String
 ) {
     fun getPricing(productId: String, marketCode: String, customerId: String?): PricingResponse {
-        logger.info("Fetching pricing for product: $productId, market: $marketCode, customer: $customerId")
+        logger.info("Fetching pricing API endpoint $pricingUrl for product: $productId, market: $marketCode, customer: $customerId")
         return restClient.get()
             .uri(uriStringBuilder(productId, marketCode, customerId))
             .retrieve()

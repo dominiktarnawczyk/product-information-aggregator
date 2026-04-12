@@ -118,12 +118,14 @@ See [CHAOS_MONKEY_QUICKSTART.md](mocks/CHAOS_MONKEY_QUICKSTART.md) for detailed 
 - The error handling is basic, returning Service Unavailable status when any upstream service fails.
 - The aggregator service has configurable timeouts for upstream service calls, but the current implementation does not include a retry mechanism.
 - Basic ports and adapters approach makes it easy to test but also to swap out the REST client for a more efficient communication mechanism (e.g., gRPC or message-based communication) in the future if needed.
+- Managing providers through catalog of providers allows for easy extension and maintenance.
 
 ## Future Improvements
 - Implement caching to reduce latency.
 - Implement authentication and authorization.
 - CI/CD pipeline for automated testing and deployment.
 - Add monitoring and alerting for service health and performance.
+- Add OpenAPI documentation for better API discoverability and client integration.
 - Migrate to gRPC for better performance.
 - Add tracing and logging for better observability of request flows and failures.
 - Use a circuit breaker pattern to handle downstream service failures more gracefully.

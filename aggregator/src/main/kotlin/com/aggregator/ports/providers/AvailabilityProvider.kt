@@ -18,7 +18,8 @@ class AvailabilityProvider(
         logger.info { "Fetching availability data for productId: $productId, market: $marketCode" }
         return try {
             availabilityClient.getAvailability(productId, marketCode)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            logger.error("Error fetching availability data", e)
             stockUnknown(marketCode)
         }
     }

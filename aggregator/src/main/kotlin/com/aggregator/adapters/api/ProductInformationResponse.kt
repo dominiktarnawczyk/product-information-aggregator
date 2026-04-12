@@ -24,15 +24,13 @@ data class SpecificationResponse(
 data class PricingResponse(
     val bestPrice: String,
     val customerDiscount: String,
-    val finalPrice: String,
-    val available: Boolean = true
+    val finalPrice: String
 )
 
 data class AvailabilityResponse(
     val stockLevel: Int?,
     val warehouseLocation: String?,
-    val expectedDelivery: String?,
-    val available: Boolean = true
+    val expectedDelivery: String?
 )
 
 data class CustomerResponse(
