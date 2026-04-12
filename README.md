@@ -109,6 +109,7 @@ The mock services have built-in latency and failure rates that can be configured
 See [CHAOS_MONKEY_QUICKSTART.md](mocks/CHAOS_MONKEY_QUICKSTART.md) for detailed usage guide.
 
 ## Key decisions and trade-offs
+- Tha main logic of the aggregator is in `com.aggregator.ports.ProductInfoAggregator` class, which is responsible for orchestrating calls to upstream services and aggregating their responses.
 - The mock services are implemented in a separate Spring Boot application to allow independent development and testing of the aggregator service.
 - The mock services are using interceptors on endpoints to simulate latency and failures, which allows for easy configuration and testing of different scenarios, every endpoint separately.
 - The mock services include configurable latency and failure rates to simulate real-world conditions, but the current implementation does not include advanced features like circuit breakers.
@@ -124,6 +125,7 @@ See [CHAOS_MONKEY_QUICKSTART.md](mocks/CHAOS_MONKEY_QUICKSTART.md) for detailed 
 - Implement caching to reduce latency.
 - Implement authentication and authorization.
 - CI/CD pipeline for automated testing and deployment.
+- Apply ArchUnit testing to preserve architectural constraints and prevent unintended dependencies between modules.
 - Add monitoring and alerting for service health and performance.
 - Add OpenAPI documentation for better API discoverability and client integration.
 - Migrate to gRPC for better performance.
