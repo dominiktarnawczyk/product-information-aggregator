@@ -108,3 +108,31 @@ The mock services have built-in latency and failure rates that can be configured
 
 See [CHAOS_MONKEY_QUICKSTART.md](mocks/CHAOS_MONKEY_QUICKSTART.md) for detailed usage guide.
 
+## Key decisions and trade-offs
+- The mock services are implemented in a separate Spring Boot application to allow independent development and testing of the aggregator service.
+- The mock services are using interceptors on endpoints to simulate latency and failures, which allows for easy configuration and testing of different scenarios, every endpoint separately.
+- The mock services include configurable latency and failure rates to simulate real-world conditions, but the current implementation does not include advanced features like circuit breakers.
+- The mock services can be easily extended to include additional endpoints or more complex behavior, but the current implementation focuses on simplicity for demonstration purposes.
+- The aggregator service uses a simple REST client to call upstream services, which allows for easy integration and testing, but may not be the most efficient approach for high-throughput scenarios.
+- The current implementation focuses on simplicity and clarity for demonstration purposes, rather than performance optimizations or advanced error handling.
+- The error handling is basic, returning Service Unavailable status when any upstream service fails.
+- The aggregator service has configurable timeouts for upstream service calls, but the current implementation does not include a retry mechanism.
+- Basic ports and adapters approach makes it easy to test but also to swap out the REST client for a more efficient communication mechanism (e.g., gRPC or message-based communication) in the future if needed.
+
+## Future Improvements
+- Implement caching to reduce latency.
+- Implement authentication and authorization.
+- CI/CD pipeline for automated testing and deployment.
+- Add monitoring and alerting for service health and performance.
+- Migrate to gRPC for better performance.
+- Add tracing and logging for better observability of request flows and failures.
+- Use a circuit breaker pattern to handle downstream service failures more gracefully.
+- Implement retry mechanism with exponential backoff for transient failures.
+- Use Either (Arrow Kt) type for better error handling and propagation of failure reasons to the client.
+- Implement a more comprehensive testing strategy, including integration tests that simulate various failure scenarios and edge cases.
+
+## Design question - "The Assortment team wants to add a 'Related Products' service (200ms latency, 90% reliability). How would your design accommodate this? Should it be required or optional?"
+To accommodate the addition of a "Related Products" service with 200ms latency and 90% reliability, I would design the aggregator service to treat this new service as optional. 
+This means that if the "Related Products" service fails or is slow to respond, the aggregator can still return the main product information without it.
+On mocks side, I would add a new endpoint for the "Related Products" service with the specified latency and reliability characteristics.
+In the aggregator service I would add new provider by extending InfoProvider interface and implement the logic to call the "Related Products" service, but I would also implement a timeout and fallback mechanism to ensure that if the service is unavailable or slow, it does not impact the overall response time of the aggregator service.
