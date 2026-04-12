@@ -1,6 +1,6 @@
 package com.aggregator.ports.providers
 
-import com.aggregator.adapters.api.LocalizedMessageService
+import com.aggregator.ports.locale.MessageLocalizer
 import com.aggregator.adapters.clients.CustomerClient
 import com.aggregator.ports.InformationProvider
 import com.aggregator.ports.ProviderResults
@@ -12,7 +12,7 @@ import java.util.Locale
 
 class CustomerProvider(
     private val customerClient: CustomerClient,
-    private val localizedMessageService: LocalizedMessageService
+    private val messageLocalizer: MessageLocalizer
 ) : InformationProvider<CustomerResponse> {
 
     override suspend fun fetchData(productId: String, marketCode: String, customerId: String?): CustomerResponse? {
@@ -49,7 +49,7 @@ class CustomerProvider(
     private fun customerInformationNotProvided(marketCode: String): CustomerResponse {
         val locale = Locale.forLanguageTag(marketCode)
         return CustomerResponse(
-            customerSegment = localizedMessageService.getMessage("fallback.unknown", locale),
+            customerSegment = messageLocalizer.getUnknownMessage(locale),
             preferences = null
         )
     }

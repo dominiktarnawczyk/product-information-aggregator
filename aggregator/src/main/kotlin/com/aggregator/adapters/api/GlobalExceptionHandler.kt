@@ -1,5 +1,6 @@
 package com.aggregator.adapters.api
 
+import com.aggregator.ports.locale.MessageLocalizer
 import com.aggregator.ports.providers.CatalogServiceUnrespondingException
 import com.aggregator.ports.locale.InvalidLocaleException
 import com.aggregator.ports.locale.LocaleValidator.Companion.validateLocale
@@ -15,7 +16,7 @@ import java.util.Locale
 
 @RestControllerAdvice
 class GlobalExceptionHandler(
-    private val localizedMessageService: LocalizedMessageService
+    private val messageLocalizer: MessageLocalizer
 ) {
 
     @ExceptionHandler(InvalidLocaleException::class)
@@ -32,7 +33,7 @@ class GlobalExceptionHandler(
         val locale = getLocaleFromRequest(request)
         return ResponseEntity
             .status(SERVICE_UNAVAILABLE)
-            .body(ErrorResponse(localizedMessageService.getTimeoutMessage(locale)))
+            .body(ErrorResponse(messageLocalizer.getTimeoutMessage(locale)))
     }
 
     @ExceptionHandler(CatalogServiceUnrespondingException::class)
@@ -41,7 +42,7 @@ class GlobalExceptionHandler(
         val locale = getLocaleFromRequest(request)
         return ResponseEntity
             .status(SERVICE_UNAVAILABLE)
-            .body(ErrorResponse(localizedMessageService.getCatalogCriticalMessage(locale)))
+            .body(ErrorResponse(messageLocalizer.getCatalogCriticalMessage(locale)))
     }
 
     @ExceptionHandler(Exception::class)
@@ -50,7 +51,7 @@ class GlobalExceptionHandler(
         val locale = getLocaleFromRequest(request)
         return ResponseEntity
             .status(SERVICE_UNAVAILABLE)
-            .body(ErrorResponse(localizedMessageService.getServiceUnavailableMessage(locale, ex.message)))
+            .body(ErrorResponse(messageLocalizer.getServiceUnavailableMessage(locale, ex.message)))
     }
 
     private fun getLocaleFromRequest(request: HttpServletRequest): Locale {

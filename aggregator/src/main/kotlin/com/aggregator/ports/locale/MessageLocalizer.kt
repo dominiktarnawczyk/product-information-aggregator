@@ -1,11 +1,9 @@
-package com.aggregator.adapters.api
+package com.aggregator.ports.locale
 
 import org.springframework.context.MessageSource
-import org.springframework.stereotype.Component
 import java.util.Locale
 
-@Component
-class LocalizedMessageService(
+class MessageLocalizer(
     private val messageSource: MessageSource
 ) {
     fun getMessage(key: String, locale: Locale, vararg args: Any?): String {
@@ -27,5 +25,12 @@ class LocalizedMessageService(
     fun getCatalogCriticalMessage(locale: Locale): String {
         return getMessage("error.catalog.critical", locale)
     }
-}
 
+    fun getUnknownMessage(locale: Locale): String {
+        return getMessage("fallback.unknown", locale)
+    }
+
+    fun getUnavailableMessage(locale: Locale): String {
+        return getMessage("fallback.unavailable", locale)
+    }
+}

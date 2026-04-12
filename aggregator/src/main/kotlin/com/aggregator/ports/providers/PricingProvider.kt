@@ -1,6 +1,6 @@
 package com.aggregator.ports.providers
 
-import com.aggregator.adapters.api.LocalizedMessageService
+import com.aggregator.ports.locale.MessageLocalizer
 import com.aggregator.adapters.clients.PricingClient
 import com.aggregator.ports.InformationProvider
 import com.aggregator.ports.ProviderResults
@@ -12,7 +12,7 @@ import kotlin.String
 
 class PricingProvider(
     private val pricingClient: PricingClient,
-    private val localizedMessageService: LocalizedMessageService
+    private val messageLocalizer: MessageLocalizer
 ) : InformationProvider<PricingResponse> {
 
     override suspend fun fetchData(productId: String, marketCode: String, customerId: String?): PricingResponse? {
@@ -38,7 +38,7 @@ class PricingProvider(
 
     private fun unavailablePriceResponse(marketCode: String): PricingResponse {
         val locale = Locale.forLanguageTag(marketCode)
-        val unavailable = localizedMessageService.getMessage("fallback.unavailable", locale)
+        val unavailable = messageLocalizer.getUnavailableMessage(locale)
         return PricingResponse(
             bestPrice = unavailable,
             customerDiscount = unavailable,

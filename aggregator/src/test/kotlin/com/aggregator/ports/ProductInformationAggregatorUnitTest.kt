@@ -1,6 +1,6 @@
 package com.aggregator.ports
 
-import com.aggregator.adapters.api.LocalizedMessageService
+import com.aggregator.ports.locale.MessageLocalizer
 import com.aggregator.adapters.clients.AvailabilityClient
 import com.aggregator.adapters.clients.CatalogClient
 import com.aggregator.adapters.clients.CustomerClient
@@ -44,7 +44,7 @@ class ProductInformationAggregatorUnitTest {
     @Mock
     private lateinit var customerClient: CustomerClient
 
-    private lateinit var localizedMessageService: LocalizedMessageService
+    private lateinit var messageLocalizer: MessageLocalizer
 
     private lateinit var catalogProvider: CatalogProvider
     private lateinit var pricingProvider: PricingProvider
@@ -56,7 +56,7 @@ class ProductInformationAggregatorUnitTest {
 
     @BeforeEach
     fun setUp() {
-        localizedMessageService = mock(LocalizedMessageService::class.java) { invocation ->
+        messageLocalizer = mock(MessageLocalizer::class.java) { invocation ->
             val method = invocation.method
             if (method.name == "getMessage" && invocation.arguments.isNotEmpty()) {
                 when (invocation.arguments[0] as String) {
@@ -70,9 +70,9 @@ class ProductInformationAggregatorUnitTest {
         }
 
         catalogProvider = CatalogProvider(catalogClient)
-        pricingProvider = PricingProvider(pricingClient, localizedMessageService)
-        availabilityProvider = AvailabilityProvider(availabilityClient, localizedMessageService)
-        customerProvider = CustomerProvider(customerClient, localizedMessageService)
+        pricingProvider = PricingProvider(pricingClient, messageLocalizer)
+        availabilityProvider = AvailabilityProvider(availabilityClient, messageLocalizer)
+        customerProvider = CustomerProvider(customerClient, messageLocalizer)
 
         providersCatalog = ProvidersCatalog(
             catalogProvider,

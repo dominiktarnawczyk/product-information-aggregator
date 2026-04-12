@@ -1,6 +1,6 @@
 package com.aggregator.ports.providers
 
-import com.aggregator.adapters.api.LocalizedMessageService
+import com.aggregator.ports.locale.MessageLocalizer
 import com.aggregator.adapters.clients.AvailabilityClient
 import com.aggregator.ports.InformationProvider
 import com.aggregator.ports.ProviderResults
@@ -11,7 +11,7 @@ import java.util.Locale
 
 class AvailabilityProvider(
     private val availabilityClient: AvailabilityClient,
-    private val localizedMessageService: LocalizedMessageService
+    private val messageLocalizer: MessageLocalizer
 ) : InformationProvider<AvailabilityResponse> {
 
     override suspend fun fetchData(productId: String, marketCode: String, customerId: String?): AvailabilityResponse? {
@@ -33,8 +33,8 @@ class AvailabilityProvider(
         val locale = Locale.forLanguageTag(marketCode)
         return AvailabilityResponse(
             stockLevel = -1,
-            warehouseLocation = localizedMessageService.getMessage("fallback.unknown", locale),
-            expectedDelivery = localizedMessageService.getMessage("fallback.unknown", locale)
+            warehouseLocation = messageLocalizer.getUnknownMessage(locale),
+            expectedDelivery = messageLocalizer.getUnknownMessage(locale)
         )
     }
 
