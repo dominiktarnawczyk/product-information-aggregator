@@ -9,7 +9,6 @@ import com.aggregator.ports.models.ProductInformation
 import com.aggregator.ports.models.PricingResponse
 import com.aggregator.ports.providers.AvailabilityProvider
 import com.aggregator.ports.providers.CatalogProvider
-import com.aggregator.ports.providers.CatalogServiceUnrespondingException
 import com.aggregator.ports.providers.CustomerProvider
 import com.aggregator.ports.providers.PricingProvider
 import kotlinx.coroutines.CoroutineScope
@@ -29,53 +28,48 @@ class ProductInformationAggregator(
         logger.info { "Aggregating product information for productId: $productId, market: $marketLanguage, customer: $customerId" }
         validateLocale(marketLanguage)
         return coroutineScope {
-            val results = providersCatalog.providers()
+            providersCatalog.providers()
                 .map { provider ->
                     providerCall(provider, productId, marketLanguage, customerId)
                 }
                 .awaitAll()
-                .fold(initialProvidersResults()) { acc, (provider, result) ->
-                    fillingProviderResults(provider, result, acc)
+                .fold(initialProvidersResults()) { resultsAccumulator, (provider, result) ->
+                    fillingProviderResults(provider, result, resultsAccumulator)
                 }
-            results.catalog?.let {
-                ProductInformation(
-                    catalog = it,
-                    pricing = results.pricing,
-                    availability = results.availability,
-                    customer = results.customer
-                )
-            } ?: throw CatalogServiceUnrespondingException("Catalog provider must return a result")
+                .let { results ->
+                    aggregatedProductInformation(results)
+                }
         }
     }
 
     private fun fillingProviderResults(
         provider: InformationProvider<*>,
         result: Any?,
-        acc: ProviderResults
+        resultsAccumulator: ProviderResults
     ): ProviderResults = when (provider) {
         is CatalogProvider -> {
             (provider as InformationProvider<CatalogResponse>)
-                .processResult(result as CatalogResponse, acc)
+                .processResult(result as CatalogResponse, resultsAccumulator)
         }
 
         is PricingProvider -> {
             (provider as InformationProvider<PricingResponse>)
-                .processResult(result as PricingResponse?, acc)
+                .processResult(result as PricingResponse?, resultsAccumulator)
         }
 
         is AvailabilityProvider -> {
             (provider as InformationProvider<AvailabilityResponse>)
-                .processResult(result as AvailabilityResponse?, acc)
+                .processResult(result as AvailabilityResponse?, resultsAccumulator)
         }
 
         is CustomerProvider -> {
             (provider as InformationProvider<CustomerResponse>)
-                .processResult(result as CustomerResponse?, acc)
+                .processResult(result as CustomerResponse?, resultsAccumulator)
         }
 
         else -> {
             logger.warn { "Unknown provider type: ${provider::class.simpleName}" }
-            acc
+            resultsAccumulator
         }
     }
 
@@ -87,6 +81,15 @@ class ProductInformationAggregator(
     ): Deferred<Pair<InformationProvider<*>, Any?>> = async(Dispatchers.IO) {
         val result = provider.fetchData(productId, marketCode, customerId)
         provider to result
+    }
+
+    private fun aggregatedProductInformation(results: ProviderResults): ProductInformation {
+        return ProductInformation(
+            catalog = requireNotNull(results.catalog) {" Catalog data is missing - this is critical" },
+            pricing = results.pricing,
+            availability = results.availability,
+            customer = results.customer
+        )
     }
 
     companion object : KLogging()

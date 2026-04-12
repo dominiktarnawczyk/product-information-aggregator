@@ -24,7 +24,7 @@ class CustomerProvider(
                 customerInformationNotProvided(marketCode)
             }
         } else {
-            logger.info { "No customer ID provided - returning null" }
+            logger.info { "No customer ID provided - returning unknown" }
             customerInformationNotProvided(marketCode)
         }
     }
