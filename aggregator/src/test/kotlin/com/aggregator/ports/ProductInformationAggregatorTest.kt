@@ -4,6 +4,7 @@ import com.aggregator.adapters.clients.AvailabilityClient
 import com.aggregator.adapters.clients.CatalogClient
 import com.aggregator.adapters.clients.CustomerClient
 import com.aggregator.adapters.clients.PricingClient
+import com.aggregator.ports.locale.InvalidLocaleException
 import com.aggregator.ports.models.AvailabilityResponse
 import com.aggregator.ports.models.CatalogResponse
 import com.aggregator.ports.models.CustomerResponse
@@ -12,6 +13,7 @@ import com.aggregator.ports.models.PricingResponse
 import com.aggregator.ports.models.SpecificationResponse
 import com.aggregator.ports.providers.AvailabilityProvider
 import com.aggregator.ports.providers.CatalogProvider
+import com.aggregator.ports.providers.CatalogServiceUnrespondingException
 import com.aggregator.ports.providers.CustomerProvider
 import com.aggregator.ports.providers.PricingProvider
 import kotlinx.coroutines.test.runTest
@@ -112,7 +114,7 @@ class ProductInformationAggregatorTest {
             .thenReturn(CustomerResponse("Premium", null))
 
         // When & Then
-        assertThrows<RuntimeException> {
+        assertThrows<CatalogServiceUnrespondingException> {
             aggregator.aggregate(productId, marketCode, customerId)
         }
     }

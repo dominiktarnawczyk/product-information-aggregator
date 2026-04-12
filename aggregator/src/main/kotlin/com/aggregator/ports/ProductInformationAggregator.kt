@@ -9,6 +9,7 @@ import com.aggregator.ports.models.ProductInformation
 import com.aggregator.ports.models.PricingResponse
 import com.aggregator.ports.providers.AvailabilityProvider
 import com.aggregator.ports.providers.CatalogProvider
+import com.aggregator.ports.providers.CatalogServiceUnrespondingException
 import com.aggregator.ports.providers.CustomerProvider
 import com.aggregator.ports.providers.PricingProvider
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +44,7 @@ class ProductInformationAggregator(
                     availability = results.availability,
                     customer = results.customer
                 )
-            } ?: throw IllegalStateException("Catalog provider must return a result")
+            } ?: throw CatalogServiceUnrespondingException("Catalog provider must return a result")
         }
     }
 

@@ -1,6 +1,5 @@
 package com.aggregator.ports.locale
 
-import com.aggregator.ports.InvalidLocaleException
 import java.util.Locale
 
 class LocaleValidator {

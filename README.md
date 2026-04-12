@@ -77,7 +77,6 @@ endpoints:
 ### Prerequisites
 - JDK 21
 - Gradle 8.x
-- Mock services running on port 8081
 
 ### Start Mock Services
 ```bash

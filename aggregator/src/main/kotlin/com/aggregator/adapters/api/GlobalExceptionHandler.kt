@@ -1,11 +1,13 @@
 package com.aggregator.adapters.api
 
-import com.aggregator.ports.InvalidLocaleException
+import com.aggregator.ports.providers.CatalogServiceUnrespondingException
+import com.aggregator.ports.locale.InvalidLocaleException
 import com.aggregator.ports.locale.LocaleValidator.Companion.validateLocale
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.TimeoutCancellationException
 import mu.KLogging
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -29,16 +31,16 @@ class GlobalExceptionHandler(
         logger.error { "Request timeout: ${ex.message}" }
         val locale = getLocaleFromRequest(request)
         return ResponseEntity
-            .status(HttpStatus.SERVICE_UNAVAILABLE)
+            .status(SERVICE_UNAVAILABLE)
             .body(ErrorResponse(localizedMessageService.getTimeoutMessage(locale)))
     }
 
-    @ExceptionHandler(IllegalStateException::class)
-    fun handleIllegalStateException(ex: IllegalStateException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(CatalogServiceUnrespondingException::class)
+    fun handleCatalogServiceUnrespondingException(ex: CatalogServiceUnrespondingException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
         logger.error { "Catalog service failed - critical: ${ex.message}" }
         val locale = getLocaleFromRequest(request)
         return ResponseEntity
-            .status(HttpStatus.SERVICE_UNAVAILABLE)
+            .status(SERVICE_UNAVAILABLE)
             .body(ErrorResponse(localizedMessageService.getCatalogCriticalMessage(locale)))
     }
 
@@ -47,7 +49,7 @@ class GlobalExceptionHandler(
         logger.error(ex) { "Aggregation failed: ${ex.message}" }
         val locale = getLocaleFromRequest(request)
         return ResponseEntity
-            .status(HttpStatus.SERVICE_UNAVAILABLE)
+            .status(SERVICE_UNAVAILABLE)
             .body(ErrorResponse(localizedMessageService.getServiceUnavailableMessage(locale, ex.message)))
     }
 
