@@ -1,5 +1,6 @@
 package com.aggregator.config
 
+import com.aggregator.adapters.api.LocalizedMessageService
 import com.aggregator.adapters.clients.AvailabilityClient
 import com.aggregator.adapters.clients.CatalogClient
 import com.aggregator.adapters.clients.CustomerClient
@@ -36,17 +37,26 @@ class InformationProviderConfig {
     }
 
     @Bean
-    fun availabilityProvider(availabilityClient: AvailabilityClient): AvailabilityProvider {
-        return AvailabilityProvider(availabilityClient)
+    fun availabilityProvider(
+        availabilityClient: AvailabilityClient,
+        localizedMessageService: LocalizedMessageService
+    ): AvailabilityProvider {
+        return AvailabilityProvider(availabilityClient, localizedMessageService)
     }
 
     @Bean
-    fun pricingProvider(pricingClient: PricingClient): PricingProvider {
-        return PricingProvider(pricingClient)
+    fun pricingProvider(
+        pricingClient: PricingClient,
+        localizedMessageService: LocalizedMessageService
+    ): PricingProvider {
+        return PricingProvider(pricingClient, localizedMessageService)
     }
 
     @Bean
-    fun customerProvider(customerClient: CustomerClient): CustomerProvider {
-        return CustomerProvider(customerClient)
+    fun customerProvider(
+        customerClient: CustomerClient,
+        localizedMessageService: LocalizedMessageService
+    ): CustomerProvider {
+        return CustomerProvider(customerClient, localizedMessageService)
     }
 }

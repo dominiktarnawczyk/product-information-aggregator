@@ -1,5 +1,6 @@
 package com.aggregator.ports
 
+import com.aggregator.adapters.api.LocalizedMessageService
 import com.aggregator.adapters.clients.AvailabilityClient
 import com.aggregator.adapters.clients.CatalogClient
 import com.aggregator.adapters.clients.CustomerClient
@@ -17,34 +18,71 @@ import com.aggregator.ports.providers.CatalogServiceUnrespondingException
 import com.aggregator.ports.providers.CustomerProvider
 import com.aggregator.ports.providers.PricingProvider
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito.mock
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
-class ProductInformationAggregatorTest {
+@ExtendWith(MockitoExtension::class)
+class ProductInformationAggregatorUnitTest {
 
-    private val catalogClient = mock(CatalogClient::class.java)
-    private val pricingClient = mock(PricingClient::class.java)
-    private val availabilityClient = mock(AvailabilityClient::class.java)
-    private val customerClient = mock(CustomerClient::class.java)
+    @Mock
+    private lateinit var catalogClient: CatalogClient
 
-    private val catalogProvider = CatalogProvider(catalogClient)
-    private val pricingProvider = PricingProvider(pricingClient)
-    private val availabilityProvider = AvailabilityProvider(availabilityClient)
-    private val customerProvider = CustomerProvider(customerClient)
+    @Mock
+    private lateinit var pricingClient: PricingClient
 
-    private val providersCatalog = ProvidersCatalog(
-        catalogProvider,
-        pricingProvider,
-        availabilityProvider,
-        customerProvider
-    )
+    @Mock
+    private lateinit var availabilityClient: AvailabilityClient
 
-    private val aggregator = ProductInformationAggregator(providersCatalog)
+    @Mock
+    private lateinit var customerClient: CustomerClient
+
+    private lateinit var localizedMessageService: LocalizedMessageService
+
+    private lateinit var catalogProvider: CatalogProvider
+    private lateinit var pricingProvider: PricingProvider
+    private lateinit var availabilityProvider: AvailabilityProvider
+    private lateinit var customerProvider: CustomerProvider
+
+    private lateinit var providersCatalog: ProvidersCatalog
+    private lateinit var aggregator: ProductInformationAggregator
+
+    @BeforeEach
+    fun setUp() {
+        localizedMessageService = mock(LocalizedMessageService::class.java) { invocation ->
+            val method = invocation.method
+            if (method.name == "getMessage" && invocation.arguments.isNotEmpty()) {
+                when (invocation.arguments[0] as String) {
+                    "fallback.unknown" -> "Unknown"
+                    "fallback.unavailable" -> "Unavailable"
+                    else -> invocation.arguments[0] as String
+                }
+            } else {
+                ""
+            }
+        }
+
+        catalogProvider = CatalogProvider(catalogClient)
+        pricingProvider = PricingProvider(pricingClient, localizedMessageService)
+        availabilityProvider = AvailabilityProvider(availabilityClient, localizedMessageService)
+        customerProvider = CustomerProvider(customerClient, localizedMessageService)
+
+        providersCatalog = ProvidersCatalog(
+            catalogProvider,
+            pricingProvider,
+            availabilityProvider,
+            customerProvider
+        )
+
+        aggregator = ProductInformationAggregator(providersCatalog)
+    }
 
     @Test
     fun `should aggregate all services successfully`() = runTest {
@@ -151,7 +189,8 @@ class ProductInformationAggregatorTest {
 
         // Then
         assertNotNull(productInfo.catalog)
-        assertNull(productInfo.pricing)
+        assertNotNull(productInfo.pricing) // Returns fallback data
+        assertEquals("Unavailable", productInfo.pricing?.finalPrice)
         assertNotNull(productInfo.availability)
         assertNotNull(productInfo.customer)
     }
@@ -189,7 +228,9 @@ class ProductInformationAggregatorTest {
         // Then
         assertNotNull(productInfo.catalog)
         assertNotNull(productInfo.pricing)
-        assertNull(productInfo.availability)
+        assertNotNull(productInfo.availability) // Returns fallback data
+        assertEquals(-1, productInfo.availability.stockLevel)
+        assertEquals("Unknown", productInfo.availability.warehouseLocation)
         assertNotNull(productInfo.customer)
     }
 
@@ -227,7 +268,8 @@ class ProductInformationAggregatorTest {
         assertNotNull(productInfo.catalog)
         assertNotNull(productInfo.pricing)
         assertNotNull(productInfo.availability)
-        assertNull(productInfo.customer) // Customer failed, should be null (standard response)
+        assertNotNull(productInfo.customer)
+        assertEquals("Unknown", productInfo.customer.customerSegment)
     }
 
     @Test
@@ -262,7 +304,8 @@ class ProductInformationAggregatorTest {
         assertNotNull(productInfo.catalog)
         assertNotNull(productInfo.pricing)
         assertNotNull(productInfo.availability)
-        assertNull(productInfo.customer)
+        assertNotNull(productInfo.customer)
+        assertEquals("Unknown", productInfo.customer.customerSegment)
     }
 
     @Test
@@ -336,8 +379,7 @@ class ProductInformationAggregatorTest {
 
         // When
         val productInfo = aggregator.aggregate(productId, marketCode, customerId)
-
-        // Then - should not throw and return valid data
+        // Then
         assertNotNull(productInfo.catalog)
     }
 }

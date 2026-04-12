@@ -1,5 +1,6 @@
 package com.aggregator.ports.providers
 
+import com.aggregator.adapters.api.LocalizedMessageService
 import com.aggregator.adapters.clients.CustomerClient
 import com.aggregator.ports.InformationProvider
 import com.aggregator.ports.ProviderResults
@@ -7,9 +8,11 @@ import com.aggregator.ports.models.Customer
 import com.aggregator.ports.models.CustomerResponse
 import com.aggregator.ports.models.Preferences
 import mu.KLogging
+import java.util.Locale
 
 class CustomerProvider(
-    private val customerClient: CustomerClient
+    private val customerClient: CustomerClient,
+    private val localizedMessageService: LocalizedMessageService
 ) : InformationProvider<CustomerResponse> {
 
     override suspend fun fetchData(productId: String, marketCode: String, customerId: String?): CustomerResponse? {
@@ -17,13 +20,12 @@ class CustomerProvider(
             logger.info { "Fetching customer data for market: $marketCode, customer: $customerId" }
             try {
                 customerClient.getCustomer(marketCode, customerId)
-            } catch (e: Exception) {
-                logger.warn { "Customer service failed - will return null" }
-                null
+            } catch (_: Exception) {
+                customerInformationNotProvided(marketCode)
             }
         } else {
             logger.info { "No customer ID provided - returning null" }
-            null
+            customerInformationNotProvided(marketCode)
         }
     }
 
@@ -43,6 +45,14 @@ class CustomerProvider(
             )
         }
     )
+
+    private fun customerInformationNotProvided(marketCode: String): CustomerResponse {
+        val locale = Locale.forLanguageTag(marketCode)
+        return CustomerResponse(
+            customerSegment = localizedMessageService.getMessage("fallback.unknown", locale),
+            preferences = null
+        )
+    }
 
     companion object: KLogging()
 }
