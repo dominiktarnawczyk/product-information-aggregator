@@ -127,6 +127,7 @@ See [CHAOS_MONKEY_QUICKSTART.md](mocks/CHAOS_MONKEY_QUICKSTART.md) for detailed 
 - CI/CD pipeline for automated testing and deployment.
 - Apply ArchUnit testing to preserve architectural constraints and prevent unintended dependencies between modules.
 - Add monitoring and alerting for service health and performance.
+- Add API Versioning.
 - Add OpenAPI documentation for better API discoverability and client integration.
 - Migrate to gRPC for better performance.
 - Add tracing and logging for better observability of request flows and failures.
